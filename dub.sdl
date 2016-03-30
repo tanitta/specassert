@@ -1,0 +1,21 @@
+name "specassert"
+description "A lightweight spec assert in D programming language."
+copyright "Copyright © 2016, tanitta"
+authors "tanitta"
+
+targetType "library"
+
+dependency "colorize" version=">=1.0.5"
+
+buildType "debug-profile" {
+	buildOptions "debugMode" "debugInfo" "profile"
+}
+
+buildType "optimized" {
+	buildOptions "optimize"
+}
+
+buildType "spec" {
+	versions "spec"
+}
+
