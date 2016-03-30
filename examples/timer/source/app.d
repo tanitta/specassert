@@ -21,6 +21,7 @@ class Timer(N) {
 	auto timer = new Timer!double;
 	specAssert(__traits(hasMember, timer, "start"));
 	specAssert(__traits(hasMember, timer, "stop"));
+	specAssert(!__traits(hasMember, timer, "stop"));
 }
 
 version(unittest){
