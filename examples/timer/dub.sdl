@@ -1,0 +1,11 @@
+name "timer"
+description "specassert example"
+copyright "Copyright © 2016, tanitta"
+authors "tanitta"
+
+dependency "specassert" path="../../../specassert"
+
+buildType "spec" {
+	buildOptions "unittests"
+	versions "spec"
+}

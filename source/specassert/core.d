@@ -6,6 +6,12 @@ import core.exception;
 enum spec;
 /++
 +/
+struct describe{
+	string name;
+}
+
+/++
++/
 private class TestCorrecter {
 	public{
 		alias T = Test;
@@ -42,7 +48,7 @@ private class TestCorrecter {
 				with(test){
 					auto statusColor = isSuccess?"green":"red";
 					text(file, "(", line, ")").color(statusColor).writeln;
-					text(msg).color(statusColor).writeln;
+					if(msg!="")text(msg).color(statusColor).writeln;
 					text("mod     : ", mod).color(statusColor).writeln;
 					text("prettyFunction     : ", prettyFunction).color(statusColor).writeln;
 					"".writeln;
