@@ -1,7 +1,4 @@
 module specassert.core;
-import std.stdio;
-
-import core.exception;
 
 enum spec;
 
@@ -81,6 +78,7 @@ private class SpecCorrecter {
 			// writeln("tests:", _tests.length);
 			T[] errors;
 			T[] successes;
+			import std.stdio;
 			writeln;
 			foreach (test; _tests) {
 				if(test.isSuccess){
@@ -95,9 +93,12 @@ private class SpecCorrecter {
 			
 			foreach (test; _tests) {
 				with(test){
-					auto statusColor = isSuccess?"green":"red";
+					auto statusColor = isSuccess?fg.green:fg.red;
 					text(file, "(", line, ")").color(statusColor).writeln;
-					test.parsedAssertCondition[0].text.color(statusColor).writeln;
+					
+					if(test.parsedAssertCondition.length!=0){
+						test.parsedAssertCondition[0].text.color(statusColor, bg.init, mode.bold).writeln;
+					}
 					if(msg!="")text(msg).color(statusColor).writeln;
 					// text("mod     : ", mod).color(statusColor).writeln;
 					// text("prettyFunction     : ", prettyFunction).color(statusColor).writeln;
@@ -129,6 +130,7 @@ private void processSpec(in string file, in int line, in string moduleName, in s
 	
 	import std.conv;
 	if(testCorrector.isFailFast && !isSuccess){
+		import core.exception;
 		auto error = new AssertError(file, line);
 		error.msg = message;
 		throw error;
@@ -137,8 +139,8 @@ private void processSpec(in string file, in int line, in string moduleName, in s
 	}
 }
 
-import std.exception;
 bool specAssert(string file = __FILE__, int line = __LINE__,  string mod= __MODULE__, string prettyFunction = __PRETTY_FUNCTION__)(bool isSuccess){
+	import core.exception;
 	try{
 		processSpec(file, line, mod, prettyFunction, isSuccess, "");
 	}catch(AssertError err){
