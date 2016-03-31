@@ -34,7 +34,7 @@ class Timer(N) {
 	specAssert(timer.time == N(1));
 }
 
-// if you write main block, describe "mixin SpecAssert" within conditional compile.
+// if you write main block, describe within conditional compile.
 version(unittest){
 }else{
 	void main(){}
