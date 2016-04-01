@@ -21,12 +21,12 @@ class Spec{
 			_isSuccess = isSuccess;
 		}
 		@property{
-			string file()const{return _file;}
-			size_t line()const{return _line;}
-			string mod()const{return _mod;}
-			string prettyFunction()const{return _prettyFunction;}
-			string msg()const{return _msg;}
-			bool isSuccess()const{return _isSuccess;}
+			string file()const nothrow @nogc{return _file;}
+			size_t line()const nothrow @nogc{return _line;}
+			string mod()const nothrow @nogc{return _mod;}
+			string prettyFunction()const nothrow @nogc{return _prettyFunction;}
+			string msg()const nothrow @nogc{return _msg;}
+			bool isSuccess()const nothrow @nogc{return _isSuccess;}
 		}
 	}//public
 
@@ -40,7 +40,7 @@ class Spec{
 	}//private
 }//class SpecCase
 
-string[] parsedAssertCondition(Spec s){
+string[] parsedAssertCondition(in Spec s){
 	import std.file;
 	import std.conv;
 	string source = read(s.file).to!string;
@@ -72,12 +72,12 @@ private class SpecCorrecter {
 			bool isFailFast = true;
 		}
 		
-		void tally(){
+		void tally()const{
 			import colorize;
 			import std.conv;
 			// writeln("tests:", _tests.length);
-			T[] errors;
-			T[] successes;
+			const(T)[] errors;
+			const(T)[] successes;
 			import std.stdio;
 			writeln;
 			foreach (test; _tests) {
@@ -93,7 +93,7 @@ private class SpecCorrecter {
 			
 			foreach (test; _tests) {
 				with(test){
-					auto statusColor = isSuccess?fg.green:fg.red;
+					immutable statusColor = isSuccess?fg.green:fg.red;
 					text(file, "(", line, ")").color(statusColor).writeln;
 					
 					if(test.parsedAssertCondition.length!=0){
@@ -154,6 +154,7 @@ bool specAssert(string file = __FILE__, int line = __LINE__,  string mod= __MODU
 }
 
 bool specAssert(string file = __FILE__, int line = __LINE__,  string mod= __MODULE__, string prettyFunction = __PRETTY_FUNCTION__)(bool isSuccess, string message){
+	import core.exception;
 	try{
 		processSpec(file, line, mod, prettyFunction, isSuccess, message);
 	}catch(AssertError err){
@@ -167,7 +168,10 @@ bool specAssert(string file = __FILE__, int line = __LINE__,  string mod= __MODU
 }
 
 mixin template SpecAssert(){
+	static __gshared testCorrector = new SpecCorrecter;
 	void main(){
+		import std.stdio;
+		"Running tests".writeln;
 		foreach (spec; __traits(getUnitTests, spec)) {
 			spec();
 		}
@@ -175,5 +179,6 @@ mixin template SpecAssert(){
 	}
 }
 
-static __gshared testCorrector = new SpecCorrecter;
-mixin SpecAssert;
+version(unittest){
+	mixin SpecAssert;
+}
