@@ -30,7 +30,7 @@ class Timer(N) {
 	timer.start;
 	timer.count;
 	timer.stop;
-	specAssert(timer.time == N(1), text(timer.time));
+	timer.time.specAssert!("==")(N(1));
 }
 
 // if you write main block, describe within conditional compile.

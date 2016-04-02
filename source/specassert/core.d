@@ -40,7 +40,7 @@ class Spec{
 	}//private
 }//class SpecCase
 
-string[] parsedAssertCondition(in Spec s){
+string[] parsedAssertCondition(in Spec s, bool willSpritArgs = true){
 	import std.file;
 	import std.conv;
 	string source = read(s.file).to!string;
@@ -49,8 +49,13 @@ string[] parsedAssertCondition(in Spec s){
 	string[] lines = source.split("\n");
 	
 	import std.array;
-	import specassert.parser;
-	return lines[s.line-1..$].join("\n").parseSource;
+	// if (willSpritArgs) {
+		import specassert.parser;
+		// return lines[s.line-1..$].join("\n").parseSource;
+	// }else{
+		import std.string;
+		return [lines[s.line-1].strip];
+	// }
 }
 unittest{
 	// parsedAssertCondition(new Spec("source/specassert/core.d", 59, "hoge", "func", "msg", true)).writeln;
@@ -154,6 +159,24 @@ bool specAssert(string file = __FILE__, int line = __LINE__,  string mod= __MODU
 }
 
 bool specAssert(string file = __FILE__, int line = __LINE__,  string mod= __MODULE__, string prettyFunction = __PRETTY_FUNCTION__)(bool isSuccess, string message){
+	import core.exception;
+	try{
+		processSpec(file, line, mod, prettyFunction, isSuccess, message);
+	}catch(AssertError err){
+		with(err){
+			auto error = new AssertError(file, line);
+			error.msg = message;
+			throw error;
+		}
+	}
+	return isSuccess;
+}
+
+bool specAssert(string Operator, L, R,  string file = __FILE__, int line = __LINE__,  string mod= __MODULE__, string prettyFunction = __PRETTY_FUNCTION__)(L left, R right){
+	mixin("bool isSuccess =  left "~Operator~"right;" );
+	import std.conv:text;
+	string message = text(left, " ", Operator, " ", right);
+	
 	import core.exception;
 	try{
 		processSpec(file, line, mod, prettyFunction, isSuccess, message);
