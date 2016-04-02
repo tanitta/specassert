@@ -16,7 +16,7 @@ class Timer(N) {
 	}//private
 }//class Timer
 
-@spec unittest{
+unittest{
 	alias N = double;
 	specAssert(__traits(compiles, (){auto timer = new Timer!N;}));
 	
@@ -26,7 +26,7 @@ class Timer(N) {
 	specAssert(__traits(hasMember, timer, "stop"));
 	
 	import std.conv;
-	specAssert(timer.time == N(0), text(timer.time));
+	specAssert(timer.time == N(0));
 	timer.start;
 	timer.count;
 	timer.stop;

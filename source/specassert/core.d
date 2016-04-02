@@ -1,13 +1,5 @@
 module specassert.core;
 
-enum spec;
-
-/++
-+/
-struct describe{
-	string name;
-}
-
 /++
 +/
 class Spec{
@@ -125,12 +117,6 @@ private class SpecCorrecter {
 	}//private
 }//class ErrorCorector
 
-
-
-
-
-
-
 private void processSpec(in string file, in int line, in string moduleName, in string prettyFunction, in bool isSuccess, in string message){
 	
 	import std.conv;
@@ -191,13 +177,9 @@ bool specAssert(string Operator, L, R,  string file = __FILE__, int line = __LIN
 }
 
 mixin template SpecAssert(){
-	static __gshared testCorrector = new SpecCorrecter;
+	private static __gshared testCorrector = new SpecCorrecter;
+	
 	void main(){
-		import std.stdio;
-		"Running tests".writeln;
-		foreach (spec; __traits(getUnitTests, spec)) {
-			spec();
-		}
 		testCorrector.tally;
 	}
 }
