@@ -41,16 +41,8 @@ string[] parsedAssertCondition(in Spec s, bool willSpritArgs = true){
 	string[] lines = source.split("\n");
 	
 	import std.array;
-	// if (willSpritArgs) {
-		import specassert.parser;
-		// return lines[s.line-1..$].join("\n").parseSource;
-	// }else{
-		import std.string;
-		return [lines[s.line-1].strip];
-	// }
-}
-unittest{
-	// parsedAssertCondition(new Spec("source/specassert/core.d", 59, "hoge", "func", "msg", true)).writeln;
+	import std.string;
+	return [lines[s.line-1].strip];
 }
 
 /++
@@ -72,7 +64,6 @@ private class SpecCorrecter {
 		void tally()const{
 			import colorize;
 			import std.conv;
-			// writeln("tests:", _tests.length);
 			const(T)[] errors;
 			const(T)[] successes;
 			import std.stdio;
@@ -97,8 +88,6 @@ private class SpecCorrecter {
 						test.parsedAssertCondition[0].text.color(statusColor, bg.init, mode.bold).writeln;
 					}
 					if(msg!="")text(msg).color(statusColor).writeln;
-					// text("mod     : ", mod).color(statusColor).writeln;
-					// text("prettyFunction     : ", prettyFunction).color(statusColor).writeln;
 					"".writeln;
 				}
 			}
