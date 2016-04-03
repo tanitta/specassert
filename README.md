@@ -3,7 +3,7 @@ specassert
 
 A lightweight spec assert in D programming language.
 
-	@spec unittest{
+	unittest{
 		alias N = double;
 		specAssert(__traits(compiles, (){
 			auto timer = new Timer!N;
@@ -27,4 +27,4 @@ A lightweight spec assert in D programming language.
 
 1. set spec buildType to your project's sdl file.(cf. examples/timer/dub.sdl)
 2. write spec unittests.(cf. examples/timer/dub.sdl)
-3. test with command `dub test --build=spec`
+3. test with command `dub run --build=spec`

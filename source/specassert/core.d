@@ -107,16 +107,17 @@ private class SpecCorrecter {
 }//class ErrorCorector
 
 private void processSpec(in string file, in int line, in string moduleName, in string prettyFunction, in bool isSuccess, in string message){
-	
-	import std.conv;
-	if(testCorrector.isFailFast && !isSuccess){
-		import core.exception;
-		auto error = new AssertError(file, line);
-		error.msg = message;
-		throw error;
-	}else{
-		testCorrector.add(new Spec(file, line, moduleName, prettyFunction, message, isSuccess));
-	}
+	// version(unittest){
+		import std.conv;
+		if(testCorrector.isFailFast && !isSuccess){
+			import core.exception;
+			auto error = new AssertError(file, line);
+			error.msg = message;
+			throw error;
+		}else{
+			testCorrector.add(new Spec(file, line, moduleName, prettyFunction, message, isSuccess));
+		}
+	// }
 }
 
 bool specAssert(string file = __FILE__, int line = __LINE__,  string mod= __MODULE__, string prettyFunction = __PRETTY_FUNCTION__)(bool isSuccess){
@@ -165,10 +166,11 @@ bool specAssert(string Operator, L, R,  string file = __FILE__, int line = __LIN
 	return isSuccess;
 }
 
+package __gshared testCorrector = new SpecCorrecter;
 mixin template SpecAssert(){
-	private static __gshared testCorrector = new SpecCorrecter;
-	
 	void main(){
+		import std.stdio;
+		"Running test".writeln;
 		testCorrector.tally;
 	}
 }
